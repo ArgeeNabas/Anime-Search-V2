@@ -1,11 +1,14 @@
-import React from 'react'
+import React from "react";
+import Header from "../components/Header";
+import Nav from "../components/Nav";
 
 function Home() {
-	return (
-		<div>
-			Test
-		</div>
-	)
+  return (
+    <div>
+      <Nav></Nav>
+      <Header></Header>
+    </div>
+  );
 }
 
-export default Home
+export default Home;
