@@ -1,16 +1,13 @@
 import React from "react";
 import "./Nav.css";
+import AnimeEyeIcon from "../assets/Anime_eye.svg";
 
 function Nav() {
   return (
-    <div>
-      <nav>
+    <nav>
+      <div className="nav__container">
         <a href="#" class="header__logo--link blue">
-          <img
-            src="./assets/Anime_eye.svg"
-            class="header__img"
-            alt="Anime Eye Icon"
-          />
+          <img src={AnimeEyeIcon} class="header__img" alt="Anime Eye Icon" />
           Anime Search
         </a>
         <ul class="nav__link--list">
@@ -37,8 +34,8 @@ function Nav() {
             </a>
           </li>
         </ul>
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 }
 

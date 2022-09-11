@@ -1,0 +1,24 @@
+.anime__list {
+    background-color: #393E46;
+    min-height: fill-available;
+}
+
+.anime__individual:hover .anime__synopsis--container {
+    transform: translateY(0);
+}
+
+.anime__individual:hover .anime__poster {
+    transform: scale(1.05)
+}
+
+.anime__synopsis--container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    padding: 1rem;
+    max-height: 100%;
+    transform: translateY(101%);
+    transition: transform 300ms ease;
+}
