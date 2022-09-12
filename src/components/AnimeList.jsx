@@ -1,67 +1,37 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import "./AnimeList.css";
-import { SearchTerm } from "../components/SearchTerm";
 
-function AnimeList() {
-  const [anime, setAnime] = useState([]);
-  const {term, setTerm} = useContext(SearchTerm);
-  const {termFromButton, setTermFromButton} = useState("Naruto")
+function AnimeList({ loading, animeList, term, HandleSearch, setTerm }) {
   const navigate = useNavigate();
-
-
-  async function fetchPosts(termFromButton) {
-    const { data } = await axios.get(
-      `https://api.jikan.moe/v4/anime?q=${termFromButton}&sfw`
-    );
-    setAnime(data);
-  }
-
-  useEffect(() => {
-    fetchPosts(term);
-  },[])
-
-  // useEffect(() => {
-  //   axios.get(
-  //     `https://api.jikan.moe/v4/anime?q=${termFromButton}&sfw`
-  //   ).then(res => {
-  //     setAnime(res.data)
-  //   })
-  //   .catch(err => {
-  //     console.log(err)
-  //   })
-  // }, []);
-
-  // const handleClick = () => {
-  //   setTermFromButton(term)
-  // }
 
   return (
     <>
-      <form className="landing__search">
+      <form className="landing__search" onSubmit={HandleSearch}>
         <input
           value={term}
-          onChange={e => setTerm(e.target.value)}
+          onChange={(e) => setTerm(e.target.value)}
           className="landing__search--input"
           placeholder="Search Anime Titles"
           type="text"
-        ></input> 
+        ></input>
         {console.log(term)}
-        <button type='submit' className="landing__search--btn">
+        <button type="submit" className="landing__search--btn">
           <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />
         </button>
       </form>
+      {console.log("this is the data", animeList["data"])}
       <div class="anime">
-        {anime.data
-          ? anime.data
+        {animeList["data"]
+          ? animeList.data
               .sort(function (a, b) {
                 return b.score - a.score;
               })
               .map((anime) => (
-                <div class="anime__individual">
-                  <a href={anime.url} target="_blank">
+                <div class="anime__individual" key={anime.mal_id}>
+                  <a href="" onClick={() => navigate(`${anime.mal_id}`)}>
+                    {/* <a href={anime.url} target="_blank" onClick={() => navigate(`${anime.mal_id}`)}> */}
                     <img
                       class="anime__poster"
                       src={anime.images.jpg.large_image_url}
@@ -70,16 +40,20 @@ function AnimeList() {
                   </a>
                   <div class="anime__text--container">
                     <h2 class="anime__title">{anime.title}</h2>
-                    <p>Scored by: {anime.scored_by.toLocaleString()}</p>
+                    <p>
+                      Scored by:{" "}
+                      {anime.scored_by
+                        ? anime.scored_by.toLocaleString()
+                        : "N/A"}
+                    </p>
                     <p>Score: {anime.score}</p>
-                    <p>Year: {anime.aired.from.split("-")[0]}</p>
+                    <p>
+                      Year:{" "}
+                      {anime.aired.from
+                        ? anime.aired.from.split("-")[0]
+                        : "N/A"}
+                    </p>
                   </div>
-                  {/* <div class="anime__synopsis--container">
-                <p>
-                  <b>Synopsis:</b>
-                  <br/> {anime.synopsis.substring(0, 400) + "..."}
-                </p>
-              </div> */}
                 </div>
               ))
           : console.log("does not exist")}
