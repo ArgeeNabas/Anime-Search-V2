@@ -1,46 +1,33 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import Nav from "../components/Nav";
-import "./Home.css";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 
-function Home() {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState("");
+function Search({ route }) {
+  const [animeList, setAnimeList] = useState([]);
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const handleNavigate = () => {
-    setTimeout(() => {
-      navigate(`/search/${search}`);
-    }, 300);
-  };
+  const navigate = useNavigate();
+  const params = useParams();
+
+  async function fetchPosts(input) {
+    setLoading(true)
+    console.log("this ran with", input);
+    const { data } = await axios.get(
+      `https://api.jikan.moe/v4/anime?q=${input}&sfw`
+    );
+    setAnimeList(data);
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchPosts(input)
+  }, []);
 
   return (
-    <div>
-      <Nav></Nav>
-      <Header></Header>
-      <div className="landing__search">
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onKeyPress={(event) => {
-            if (event.key === "Enter") {
-              handleNavigate();
-            }
-          }}
-          className="landing__search--input"
-          placeholder="Search Anime Titles"
-          type="text"
-        ></input>
-        {console.log(search)}
-        <button type="button" onClick={() => handleNavigate()} className="landing__search--btn">
-          <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />
-        </button>
-      </div>
-      {/* <div class="anime">
-        {animeList["data"] ? (
+    <>
+      <div class="anime">
+        {!loading ? (
           animeList.data
             .sort(function (a, b) {
               return b.score - a.score;
@@ -71,9 +58,9 @@ function Home() {
         ) : (
           <h1>nope</h1>
         )}
-      </div> */}
-    </div>
+      </div>
+    </>
   );
 }
 
-export default Home;
+export default Search;
