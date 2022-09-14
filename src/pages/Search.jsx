@@ -8,44 +8,53 @@ import { setGlobalState, useGlobalState } from "../components/state/state";
 
 function Search() {
   const navigate = useNavigate();
-  const params = useParams();
+  const { animeUrl } = useParams();
 
-  const [animeList, setAnimeList] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [search] = useGlobalState("search");
-  const storedItem = JSON.parse(localStorage.getItem("items")) || [];
-  const [item, setItem] = useState(storedItem);
+  const [animeList, setAnimeList] = useState([]);
+  const [highestRated, setHighestRated] = useState([])
+  const [loading, setLoading] = useState(true);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(5);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
 
   useEffect(() => {
     if (search === "") {
-      localStorage.setItem("items", JSON.stringify(item));
-    } else {
-      localStorage.setItem("items", JSON.stringify(search));
-    }
-  }, [search]);
-
-  useEffect(() => {
-    if (search === "") {
-      fetchAnimeList(item);
+      fetchAnimeList(animeUrl);
     } else {
       fetchAnimeList(search);
     }
+    // setTimeout(() => {
+    //   if (search === "") {
+    //     fetchAnimeList(animeUrl);
+    //   } else {
+    //     fetchAnimeList(search);
+    //   }
+    // }, 300);
   }, []);
 
   async function fetchAnimeList(search) {
-    if (typeof search !== "undefined") {
-      setLoading(true);
-      console.log("search page this ran with", search);
-      const { data } = await axios.get(
-        `https://api.jikan.moe/v4/anime?q=${search}&sfw`
-      );
-      setAnimeList(data);
-      setLoading(false);
-    } else {
-      setTimeout(() => {
-        fetchAnimeList(search);
-      }, 300);
-    }
+    setLoading(true);
+    console.log("search page this ran with", search);
+    const { data } = await axios.get(
+      `https://api.jikan.moe/v4/anime?q=${search}&sfw`
+    );
+    // const sorted = data.data.sort(function (a, b) {
+    //   return b.score - a.score;
+    // })
+    setAnimeList(data);
+    setLoading(false);
+    sortAnime(animeList);
+    navigate(`/search/${search}`);
+  }
+
+  function sortAnime(animeList) {
+     setHighestRated = [...animeList.data].sort(function (a, b) {
+      return b.score - a.score;
+    });
   }
 
   return (
@@ -53,6 +62,7 @@ function Search() {
       <Nav></Nav>
       <Header></Header>
       <div className="landing__search">
+        {console.log(highestRated)}
         <input
           value={search}
           onChange={(e) => setGlobalState("search", e.target.value)}

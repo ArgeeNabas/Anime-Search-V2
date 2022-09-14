@@ -15,7 +15,7 @@ function Home() {
 
   const handleNavigate = () => {
     setTimeout(() => {
-      navigate(`/search`);
+      navigate(`/search/${search}`);
     }, 300);
   };
 
@@ -23,6 +23,7 @@ function Home() {
     <div>
       <Nav></Nav>
       <Header></Header>
+      {console.log('this is the term',search)}
       <div className="landing__search">
         <input
           value={search}

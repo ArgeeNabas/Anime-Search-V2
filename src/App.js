@@ -16,7 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/search" element={<Search />}></Route>
-          {/* <Route path="/search/:input" element={<Search />}></Route> */}
+          <Route path="/search/:animeUrl" element={<Search />}></Route>
           <Route path=":mal_id" element={<Details />}></Route>
         </Routes>
       </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 
@@ -8,6 +8,7 @@ function Details() {
   const { mal_id } = useParams();
   const [singleAnime, setSingleAnime] = useState([{}]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   async function fetchSingleAnime(mal_id) {
     setLoading(true);
@@ -23,19 +24,11 @@ function Details() {
     fetchSingleAnime(mal_id);
   }, [setSingleAnime]);
 
-  // const HandleSearch = (e) => {
-  //   e.preventDefault();
-
-  //   fetchSingleAnime(mal_id);
-  // }
-
   return (
     <>
       <Nav></Nav>
       <Header></Header>
-      <Link to="/search">
-        <button>← Back</button>
-      </Link>
+      <button onClick={() => navigate(-1)}>← Back</button>
       {loading ? (
         <h1>nope</h1>
       ) : (
