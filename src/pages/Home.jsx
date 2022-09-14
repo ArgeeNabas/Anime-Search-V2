@@ -5,15 +5,17 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 import "./Home.css";
+import { setGlobalState, useGlobalState } from '../components/state/state'
 
 function Home() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [search] = useGlobalState("search");
+
 
   const handleNavigate = () => {
     setTimeout(() => {
-      navigate(`/search/${search}`);
+      navigate(`/search`);
     }, 300);
   };
 
@@ -24,7 +26,7 @@ function Home() {
       <div className="landing__search">
         <input
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setGlobalState("search", e.target.value)}
           onKeyPress={(event) => {
             if (event.key === "Enter") {
               handleNavigate();
@@ -33,8 +35,8 @@ function Home() {
           className="landing__search--input"
           placeholder="Search Anime Titles"
           type="text"
+          required
         ></input>
-        {console.log(search)}
         <button type="button" onClick={() => handleNavigate()} className="landing__search--btn">
           <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />
         </button>

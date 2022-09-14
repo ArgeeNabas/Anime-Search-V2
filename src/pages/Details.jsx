@@ -33,7 +33,7 @@ function Details() {
     <>
       <Nav></Nav>
       <Header></Header>
-      <Link to="/">
+      <Link to="/search">
         <button>← Back</button>
       </Link>
       {loading ? (

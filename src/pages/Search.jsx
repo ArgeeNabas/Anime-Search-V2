@@ -1,31 +1,79 @@
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import Header from "../components/Header";
+import Nav from "../components/Nav";
+import { setGlobalState, useGlobalState } from "../components/state/state";
 
-function Search({ route }) {
-  const [animeList, setAnimeList] = useState([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(true);
-
+function Search() {
   const navigate = useNavigate();
   const params = useParams();
 
-  async function fetchPosts(input) {
-    setLoading(true)
-    console.log("this ran with", input);
-    const { data } = await axios.get(
-      `https://api.jikan.moe/v4/anime?q=${input}&sfw`
-    );
-    setAnimeList(data);
-    setLoading(false)
-  }
+  const [animeList, setAnimeList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search] = useGlobalState("search");
+  const storedItem = JSON.parse(localStorage.getItem("items")) || [];
+  const [item, setItem] = useState(storedItem);
 
   useEffect(() => {
-    fetchPosts(input)
+    if (search === "") {
+      localStorage.setItem("items", JSON.stringify(item));
+    } else {
+      localStorage.setItem("items", JSON.stringify(search));
+    }
+  }, [search]);
+
+  useEffect(() => {
+    if (search === "") {
+      fetchAnimeList(item);
+    } else {
+      fetchAnimeList(search);
+    }
   }, []);
+
+  async function fetchAnimeList(search) {
+    if (typeof search !== "undefined") {
+      setLoading(true);
+      console.log("search page this ran with", search);
+      const { data } = await axios.get(
+        `https://api.jikan.moe/v4/anime?q=${search}&sfw`
+      );
+      setAnimeList(data);
+      setLoading(false);
+    } else {
+      setTimeout(() => {
+        fetchAnimeList(search);
+      }, 300);
+    }
+  }
 
   return (
     <>
+      <Nav></Nav>
+      <Header></Header>
+      <div className="landing__search">
+        <input
+          value={search}
+          onChange={(e) => setGlobalState("search", e.target.value)}
+          onKeyPress={(event) => {
+            if (event.key === "Enter") {
+              fetchAnimeList(search);
+            }
+          }}
+          className="landing__search--input"
+          placeholder="Search Anime Titles"
+          type="text"
+          required
+        ></input>
+        <button
+          type="button"
+          onClick={() => fetchAnimeList(search)}
+          className="landing__search--btn"
+        >
+          <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />
+        </button>
+      </div>
       <div class="anime">
         {!loading ? (
           animeList.data
@@ -34,7 +82,7 @@ function Search({ route }) {
             })
             .map((anime) => (
               <div class="anime__individual" key={anime.mal_id}>
-                <a href="" onClick={() => navigate(`${anime.mal_id}`)}>
+                <a href="" onClick={() => navigate(`../${anime.mal_id}`)}>
                   <img
                     class="anime__poster"
                     src={anime.images.jpg.large_image_url}
