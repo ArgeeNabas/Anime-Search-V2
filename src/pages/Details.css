@@ -1,0 +1,29 @@
+.details {
+	max-width: 1200px;
+	display: flex;
+	/* align-items: center;
+	justify-content: center; */
+	margin: 0 auto;
+	/* width: 100%; */
+	padding-top: 16px;
+}
+
+
+.detail__poster {
+	display: flex;
+	justify-content: center;
+	width: 50%;
+}
+
+.detail__poster--img {
+	width: 400px;
+    height: 600px;
+}
+
+.detail__text {
+	height: 100%;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}

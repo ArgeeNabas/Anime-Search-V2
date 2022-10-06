@@ -6,7 +6,7 @@ function Nav() {
   return (
     <nav>
       <div className="nav__container">
-        <a href="#" class="header__logo--link blue">
+        <a href={`/`} class="header__logo--link blue">
           <img src={AnimeEyeIcon} class="header__img" alt="Anime Eye Icon" />
           Anime Search
         </a>

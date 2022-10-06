@@ -2,11 +2,11 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import Details from "./pages/Details";
 import Search from "./pages/Search";
 import { useState } from "react";
-library.add(faMagnifyingGlass);
+library.add(faMagnifyingGlass, faLeftLong);
 
 function App() {
 
